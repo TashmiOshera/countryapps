@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Single animated star component
 const AnimatedStar = ({ index }) => {
-  // Randomize initial position, size, duration, and animation delays
   const top = Math.random() * 100;
   const left = Math.random() * 100;
   const size = Math.random() * 2 + 1;
-  const driftX = Math.random() * 12 - 6; // -6 to +6 px
-  const driftY = Math.random() * 10 - 5; // -5 to +5 px
-  const duration = Math.random() * 3 + 3; // 3s to 6s
-  const delay = Math.random() * 3; // 0s to 3s
-  const pulse = Math.random() * 0.5 + 0.75; // 0.75 to 1.25
+  const duration = Math.random() * 3 + 3;
+  const delay = Math.random() * 3;
+  const pulse = Math.random() * 0.5 + 0.75;
 
   return (
     <span
@@ -29,7 +26,6 @@ const AnimatedStar = ({ index }) => {
   );
 };
 
-// Generate unique keyframes for each star's drift and pulse
 const StarFieldStyles = Array.from({ length: 70 }).map((_, i) => {
   const driftX = Math.random() * 12 - 6;
   const driftY = Math.random() * 10 - 5;
@@ -63,52 +59,78 @@ const StarField = ({ count = 70 }) => (
   </>
 );
 
+// ClockCalendar component
+const ClockCalendar = () => {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const dateStr = now.toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const timeStr = now.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+  return (
+    <div className="flex flex-col items-center justify-center mt-4 mb-4 select-none">
+      <span className="text-white/90 text-base sm:text-lg font-mono">{dateStr}</span>
+      <span className="text-yellow-300 text-xl sm:text-2xl font-bold font-mono mt-1">{timeStr}</span>
+    </div>
+  );
+};
+
 const Home = () => {
   return (
     <div
       className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-start overflow-hidden"
       style={{ backgroundImage: "url('/images/Home1.png')" }}
     >
-      {/* Animated Star Field */}
       <StarField count={70} />
 
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] pointer-events-none z-10" />
 
-      {/* Main Content */}
-      <div className="z-20 flex flex-col items-center w-full mt-24 md:mt-32 relative">
-        {/* Animated Heading */}
+      <div className="z-20 flex flex-col items-center w-full mt-16 sm:mt-24 md:mt-32 px-4 sm:px-6 lg:px-8 max-w-5xl">
         <h1
-          className="text-6xl md:text-7xl font-extrabold text-white tracking-tight text-center mb-4 drop-shadow-xl font-mono animate-fadeInDown"
+          className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-white tracking-tight text-center mb-4 drop-shadow-xl font-mono animate-fadeInDown"
           style={{
             letterSpacing: "0.04em",
             fontFamily: "'Montserrat', 'Poppins', 'Segoe UI', 'Arial', sans-serif"
           }}
         >
-          <span className="inline-block align-middle mr-3 text-7xl md:text-8xl animate-bounce-slow">🌍</span>
+          <span className="inline-block align-middle mr-2 text-5xl sm:text-6xl md:text-8xl animate-bounce-slow">🌍</span>
           Country Explorer
         </h1>
-        {/* Subheading */}
-        <p className="text-white/80 text-lg md:text-xl font-medium leading-relaxed mb-8 text-center max-w-2xl animate-fadeInUp delay-200">
+
+        <ClockCalendar />
+
+        <p className="text-white/80 text-base sm:text-lg md:text-xl font-medium leading-relaxed mb-8 text-center max-w-2xl animate-fadeInUp delay-200">
           Explore the world’s countries by name, region, or language.<br />
           Begin your journey of discovery and inspiration.
         </p>
-        {/* Animated CTA Button - moved further down, still centered */}
-        <div className="flex justify-center w-full mt-20">
+
+        <div className="flex justify-center w-full mt-16">
           <a
-            href="#explore"
-            className="inline-block rounded-full px-10 py-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 hover:from-blue-600 hover:to-pink-500 text-white text-lg font-bold shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-pink-300 animate-glow"
+            href="/country-explorer"
+            className="inline-block rounded-full px-6 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-400 hover:from-blue-600 hover:to-pink-500 text-white text-base sm:text-lg font-bold shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-pink-300 animate-glow"
           >
             Explore Now
           </a>
         </div>
-        {/* Tagline with fade-in */}
-        <div className="mt-10 text-white/60 text-base text-center italic animate-fadeInUp delay-500">
+
+        <div className="mt-10 text-white/60 text-sm sm:text-base text-center italic animate-fadeInUp delay-500">
           Where will your curiosity take you today?
         </div>
       </div>
 
-      {/* Animations */}
       <style>{`
         @keyframes fadeInDown {
           0% { opacity: 0; transform: translateY(-40px);}
@@ -134,8 +156,8 @@ const Home = () => {
           animation: bounce-slow 2.5s infinite;
         }
         @keyframes glow {
-          0% { box-shadow: 0 0 18px 4pxrgb(222, 173, 199), 0 0 0 0 #fff0;}
-          50% { box-shadow: 0 0 32px 10pxrgb(177, 170, 199), 0 0 0 0 #fff0;}
+          0% { box-shadow: 0 0 18px 4px rgb(222, 173, 199), 0 0 0 0 #fff0;}
+          50% { box-shadow: 0 0 32px 10px rgb(177, 170, 199), 0 0 0 0 #fff0;}
           100% { box-shadow: 0 0 18px 4px #f472b6, 0 0 0 0 #fff0;}
         }
         .animate-glow {

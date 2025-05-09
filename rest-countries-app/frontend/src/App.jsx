@@ -14,13 +14,15 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 // Protected route component to restrict access
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
-  
+
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-    </div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
   }
-  
+
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
@@ -65,27 +67,27 @@ function AppRoutes() {
             }
           />
 
-          {/* Protected routes */}
-          <Route path="/country-explorer" element={
-            <ProtectedRoute>
-              <CountryExplorer />
-            </ProtectedRoute>
-          } />
-          <Route path="/favorites" element={
-            <ProtectedRoute>
-              <FavoritesPage />
-            </ProtectedRoute>
-          } />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/world-map" element={
-            <ProtectedRoute>
-              <WorldMap />
-            </ProtectedRoute>
-          } />
+          {/* Public Routes */}
+          <Route path="/country-explorer" element={<CountryExplorer />} />
+          <Route path="/world-map" element={<WorldMap />} />
+
+          {/* Protected Routes */}
+          <Route
+            path="/favorites"
+            element={
+              <ProtectedRoute>
+                <FavoritesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
 
